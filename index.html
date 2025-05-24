@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clock</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="clock"></div>
 <p id="instructions">Click the circle before the second ticks over on the clock!</p>
+<div id="animation-toggle-container">
+    <label for="animation-toggle">Reduce Animations:</label>
+    <input type="checkbox" id="animation-toggle" aria-describedby="animation-toggle-desc">
+    <p id="animation-toggle-desc" class="sr-only">Check to reduce motion and animations in the game.</p>
+</div>
 <div id="game-area">
-    <div id="target"></div>
+    <div id="target" tabindex="0" role="button"></div>
     <div id="score-display">Score: <span id="score">0</span></div>
 </div>
 <script src="script.js"></script>

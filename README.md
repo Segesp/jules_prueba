@@ -11,6 +11,13 @@ A dynamic web application featuring a sleek, space-themed digital clock and an e
     -   Enhanced visual feedback with polished animations for hits and misses.
 -   **Dark Mode Interface:** Stylish and easy on the eyes, inspired by GitHub's dark theme with space elements.
 -   **Interactive Tutorial:** A guided walkthrough for first-time users explaining how to play the game.
+-   **Responsive Design:** Adapts to various screen sizes for a consistent experience on desktop, tablet, and mobile devices.
+-   **Accessibility Enhancements:**
+    -   Full keyboard navigation for all interactive elements.
+    -   Clear visual focus indicators.
+    -   Game target operable via keyboard (Enter/Space).
+    -   ARIA role (`role="button"`) for the game target to improve screen reader understanding.
+    -   Option to reduce or disable animations for users sensitive to motion.
 -   **Lightweight and Fast-Loading:** Built with pure HTML, CSS, and JavaScript.
 -   **Easy to Deploy:** Static files ready for any web hosting service (GitHub Pages instructions included).
 

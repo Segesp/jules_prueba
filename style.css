@@ -13,28 +13,27 @@
 
 body {
     display: flex;
-    flex-direction: column; /* Stack clock and game area vertically */
+    flex-direction: column; 
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Use min-height to ensure full viewport coverage */
+    min-height: 100vh; 
     margin: 0;
     background-color: var(--color-bg);
-    /* Subtle starry background */
     background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
                       radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
                       radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
                       radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
     background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px; 
     background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern font stack */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     color: var(--color-primary-text);
+    padding: 10px; /* Base padding for small screens */
 }
 
 #clock {
     font-size: 5em;
     color: var(--color-accent-blue);
-    /* background-color: var(--color-surface); */ /* Replaced by gradient */
-    background-image: linear-gradient(rgba(255,255,255,0.03), rgba(0,0,0,0.03)), var(--color-surface); /* Subtle overlay gradient */
+    background-image: linear-gradient(rgba(255,255,255,0.03), rgba(0,0,0,0.03)), var(--color-surface); 
     padding: 20px 40px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0,0,0,0.3), 0 0 8px var(--color-accent-blue), inset 0 0 10px rgba(0,0,0,0.2);
@@ -46,12 +45,15 @@ body {
 
 #instructions {
     text-align: center;
-    font-size: 1.1em;
+    font-size: 1.1em; 
     color: var(--color-secondary-text);
-    margin-top: 20px; /* Added margin-top for spacing from clock */
-    margin-bottom: 25px; /* Increased bottom margin */
-    max-width: 350px;
-    line-height: 1.5; /* Ensure good line spacing */
+    margin-top: 20px; 
+    margin-bottom: 25px; 
+    max-width: 90%; /* Use percentage for flexibility */
+    width: 350px; /* Keep a max specific width for larger screens if desired */
+    line-height: 1.5; 
+    margin-left: auto; /* Center max-width element */
+    margin-right: auto;
 }
 
 #game-area {
@@ -59,21 +61,23 @@ body {
     border: 1px solid var(--color-border);
     border-radius: 15px;
     text-align: center;
-    width: 320px;
-    /* background-color: var(--color-surface); */ /* Replaced by gradient */
-    background-image: linear-gradient(rgba(255,255,255,0.02), rgba(0,0,0,0.02)), var(--color-surface); /* Subtle overlay gradient */
+    width: 320px; /* This will be the max-width effectively */
+    max-width: 90%; /* Ensure it shrinks on smaller viewports */
+    background-image: linear-gradient(rgba(255,255,255,0.02), rgba(0,0,0,0.02)), var(--color-surface);
     box-shadow: 0 0 20px rgba(0,0,0,0.2), inset 0 0 15px rgba(0,0,0,0.25);
+    margin-left: auto; /* Center if using max-width */
+    margin-right: auto;
 }
 
 #target {
     width: 60px; 
     height: 60px;
-    background-color: var(--color-accent-blue); /* Default color before animation */
+    background-color: var(--color-accent-blue); 
     border-radius: 50%;
-    margin: 25px auto;
+    margin: 20px auto; 
     cursor: pointer;
-    opacity: 0; /* Initially hidden via opacity for animation */
-    transform: scale(0.5); /* Initial state for materialize animation */
+    opacity: 0; 
+    transform: scale(0.5); 
 }
 
 #target.hit {
@@ -92,173 +96,240 @@ body {
     text-shadow: 0 0 5px var(--color-accent-green);
 }
 
-/* Target Appearance Animation: Materialize */
-@keyframes materialize {
-    0% {
-        opacity: 0;
-        transform: scale(0.5);
-        box-shadow: 0 0 0px var(--color-accent-blue);
-    }
-    70% {
-        opacity: 1;
-        transform: scale(1.05);
-        box-shadow: 0 0 20px var(--color-accent-blue), 0 0 30px var(--color-accent-blue);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-        box-shadow: 0 0 10px var(--color-accent-blue);
-    }
+/* Target Animations */
+@keyframes materialize { /* ... existing keyframes ... */ 
+    0% { opacity: 0; transform: scale(0.5); box-shadow: 0 0 0px var(--color-accent-blue); }
+    70% { opacity: 1; transform: scale(1.05); box-shadow: 0 0 20px var(--color-accent-blue), 0 0 30px var(--color-accent-blue); }
+    100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px var(--color-accent-blue); }
+}
+@keyframes energyBurst { /* ... existing keyframes ... */ 
+    0% { transform: scale(1); background-color: var(--color-accent-green); opacity: 1; }
+    50% { transform: scale(1.3); background-color: #fff; opacity: 0.75; box-shadow: 0 0 30px var(--color-accent-green), 0 0 40px #fff; }
+    100% { transform: scale(0.8); background-color: var(--color-accent-green); opacity: 0; box-shadow: 0 0 20px var(--color-accent-green); }
+}
+@keyframes dematerialize { /* ... existing keyframes ... */
+    0% { opacity: 1; transform: scale(1); background-color: var(--color-accent-red); }
+    100% { opacity: 0; transform: scale(0.7); background-color: var(--color-accent-red); }
 }
 
-/* Target Hit Animation: Energy Burst */
-@keyframes energyBurst {
-    0% {
-        transform: scale(1);
-        background-color: var(--color-accent-green);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.3);
-        background-color: #fff; /* Flash white */
-        opacity: 0.75;
-        box-shadow: 0 0 30px var(--color-accent-green), 0 0 40px #fff;
-    }
-    100% {
-        transform: scale(0.8);
-        background-color: var(--color-accent-green);
-        opacity: 0;
-        box-shadow: 0 0 20px var(--color-accent-green);
-    }
-}
-
-/* Target Miss Animation: Dematerialize */
-@keyframes dematerialize {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-        background-color: var(--color-accent-red);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(0.7);
-        background-color: var(--color-accent-red);
-    }
-}
-
-/* Classes to trigger animations */
-#target.appear {
-    display: block !important; /* Ensure it's visible when class is added */
-    animation: materialize 0.4s ease-out forwards;
-}
-
-#target.hit-animation {
-    animation: energyBurst 0.3s ease-in forwards;
-}
-
-#target.miss-animation {
-    animation: dematerialize 0.3s ease-out forwards;
-}
+/* Animation Trigger Classes */
+#target.appear { display: block !important; animation: materialize 0.4s ease-out forwards; }
+#target.hit-animation { animation: energyBurst 0.3s ease-in forwards; }
+#target.miss-animation { animation: dematerialize 0.3s ease-out forwards; }
 
 /* Tutorial Styles */
-#tutorial-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85); /* Darker overlay for space theme */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it's on top */
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out;
+#tutorial-overlay { /* ... existing styles ... */ 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); display: flex;
+    justify-content: center; align-items: center; z-index: 1000;
+    opacity: 1; transition: opacity 0.3s ease-in-out;
 }
+#tutorial-overlay.hidden { opacity: 0; pointer-events: none; }
 
-#tutorial-overlay.hidden {
-    opacity: 0;
-    pointer-events: none; /* Prevent interaction when hidden */
-}
-
-#tutorial-box {
-    background-color: var(--color-surface);
-    padding: 30px 40px;
-    border-radius: 15px;
-    border: 1px solid var(--color-border);
-    border-top: 3px solid var(--color-accent-blue); /* Accent top border */
+#tutorial-box { /* ... existing styles ... */
+    background-color: var(--color-surface); padding: 30px 40px;
+    border-radius: 15px; border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent-blue); 
     box-shadow: 0 0 30px rgba(88, 166, 255, 0.3), 0 0 15px var(--color-accent-blue);
-    text-align: center;
-    width: 90%;
-    max-width: 450px;
-    color: var(--color-primary-text);
-    transform: scale(1);
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Add opacity to existing transition */
+    text-align: center; width: 90%; max-width: 450px;
+    color: var(--color-primary-text); transform: scale(1);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+#tutorial-overlay.hidden #tutorial-box { transform: scale(0.9); opacity: 0; }
+
+#tutorial-content p { /* ... existing styles ... */ 
+    font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;
+    color: var(--color-secondary-text);
+}
+#tutorial-content p.active-step { color: var(--color-primary-text); font-weight: bold; }
+
+#tutorial-navigation { /* ... existing styles ... */ 
+    margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px;
+}
+#tutorial-navigation button {
+    background-color: var(--color-accent-blue);
+    color: #fff;
+    border: none;
+    padding: 14px 18px; /* Increased padding */
+    min-height: 44px; /* Explicitly set min-height */
+    box-sizing: border-box; /* Ensure padding/border are included in height calculation */
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em; /* Standardize font size */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex; /* For centering text */
+    align-items: center; /* Center text vertically */
+    justify-content: center; /* Center text horizontally */
+    line-height: 1.2; /* Adjust line height for wrapped text */
+}
+#tutorial-navigation button:hover { background-color: #4a91e3; transform: translateY(-1px); }
+#tutorial-navigation button:active { transform: translateY(0px); }
+#tutorial-navigation button.hidden, #tutorial-content p.hidden { display: none; }
+
+/* Tutorial Highlighting Effect */
+.highlight-tutorial { /* ... existing styles ... */ 
+    outline: 3px solid var(--color-accent-blue);
+    box-shadow: 0 0 15px var(--color-accent-blue), 0 0 25px var(--color-accent-blue), 0 0 35px var(--color-accent-blue);
+    border-radius: inherit; position: relative; z-index: 1001;
+    transition: outline 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+#clock.highlight-tutorial, #score-display.highlight-tutorial, #game-area.highlight-tutorial { /* ... existing styles ... */ }
+
+
+/* --- Responsive Adjustments --- */
+
+/* Larger screens body padding */
+@media (min-width: 600px) {
+    body {
+        padding: 20px; 
+    }
 }
 
-#tutorial-overlay.hidden #tutorial-box {
-    transform: scale(0.9);
-    opacity: 0; /* Ensure opacity is part of the hidden state transition */
+/* Tablet Styles */
+@media (max-width: 900px) {
+    #clock {
+        font-size: 4em; 
+        padding: 15px 30px;
+        margin-bottom: 30px;
+    }
 }
 
-#tutorial-content p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    margin-bottom: 15px;
+/* Mobile Styles */
+@media (max-width: 600px) {
+    #clock {
+        font-size: 3em; 
+        padding: 10px 20px;
+        margin-bottom: 20px;
+        letter-spacing: 1px; 
+    }
+
+    #instructions {
+        font-size: 1em;
+        margin-top: 15px;
+        margin-bottom: 20px;
+        width: auto; 
+        padding-left: 15px; 
+        padding-right: 15px;
+    }
+
+    #game-area {
+        padding: 15px;
+        width: auto; 
+        /* max-width: 90%; is already set in base and applies */
+    }
+
+    #target {
+        width: 50px; 
+        height: 50px;
+        margin: 15px auto;
+    }
+
+    #score-display {
+        font-size: 1.8em;
+    }
+
+    #tutorial-box {
+        padding: 20px; 
+        width: 95%; 
+    }
+    #tutorial-content p { 
+        font-size: 1em;
+    }
+    #tutorial-navigation {
+        flex-direction: column; 
+        gap: 15px; 
+    }
+    #tutorial-navigation button {
+        width: 100%; 
+        padding: 14px 18px; /* Consistent with new base padding */
+        font-size: 1em; /* Already 1em, explicit for clarity */
+        /* min-height and box-sizing are inherited */
+    }
+}
+
+/* Focus Visible Styles */
+#target:focus-visible {
+    outline: 3px solid var(--color-accent-green); /* Use green accent for focus on target */
+    outline-offset: 3px; /* Offset outline so it doesn't overlap the target itself */
+    box-shadow: 0 0 10px var(--color-accent-green), 0 0 20px var(--color-accent-green); /* Glowing effect for focus */
+}
+
+#tutorial-navigation button:focus-visible {
+    outline: 3px solid #fff; /* White outline for buttons on dark blue background */
+    outline-offset: 2px;
+    box-shadow: 0 0 8px #fff; /* Subtle white glow */
+}
+
+/* Animation Toggle Styles */
+#animation-toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 0.9em;
     color: var(--color-secondary-text);
 }
 
-#tutorial-content p.active-step { /* To highlight current step text if needed */
-    color: var(--color-primary-text);
-    font-weight: bold;
+#animation-toggle {
+    /* Basic styling for the checkbox, can be enhanced */
+    accent-color: var(--color-accent-blue); /* Style the checkbox color */
+    width: 18px;
+    height: 18px;
 }
 
-#tutorial-navigation {
-    margin-top: 25px;
-    display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
-    gap: 10px;
+.sr-only { /* Screen-reader only class */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
-#tutorial-navigation button {
-    background-color: var(--color-accent-blue);
-    color: #fff; /* White text on accent buttons */
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+/* Styles for when animations are disabled */
+.animations-disabled #target.appear,
+.animations-disabled #target.hit-animation,
+.animations-disabled #target.miss-animation {
+    animation: none !important; /* Disable keyframe animations */
 }
 
-#tutorial-navigation button:hover {
-    background-color: #4a91e3; /* Slightly lighter blue on hover */
-    transform: translateY(-1px);
+/* Provide simple fallback transitions if animations are disabled */
+.animations-disabled #target {
+    transition: opacity 0.1s ease-out, background-color 0.1s ease-out;
 }
 
-#tutorial-navigation button:active {
-    transform: translateY(0px);
+/* When animations are disabled, ensure target becomes visible/hidden quickly */
+.animations-disabled #target.appear {
+    opacity: 1 !important; /* Make it appear instantly */
+    transform: scale(1) !important; /* Reset any initial transform for materialize */
+    display: block !important; /* Ensure it's visible */
 }
 
-#tutorial-navigation button.hidden,
-#tutorial-content p.hidden {
-    display: none;
+/* For hit/miss when animations disabled, just change color and hide */
+.animations-disabled #target.hit-animation {
+    background-color: var(--color-accent-green);
+    opacity: 0; /* Fade out quickly */
 }
 
-/* Tutorial Highlighting Effect */
-.highlight-tutorial {
-    outline: 3px solid var(--color-accent-blue); /* A bright outline */
-    box-shadow: 0 0 15px var(--color-accent-blue), 0 0 25px var(--color-accent-blue), 0 0 35px var(--color-accent-blue); /* Glowing effect */
-    border-radius: inherit; /* Inherit border-radius from the element itself or set a specific one */
-    position: relative; /* Helps with stacking context if needed */
-    z-index: 1001; /* Ensure it's above the dark overlay but below the tutorial text box */
-    transition: outline 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+.animations-disabled #target.miss-animation {
+    background-color: var(--color-accent-red);
+    opacity: 0; /* Fade out quickly */
 }
 
-/* Ensure the highlighted element is not obscured by other general elements, if necessary */
-#clock.highlight-tutorial,
-#score-display.highlight-tutorial,
-#game-area.highlight-tutorial {
-    /* Add specific position adjustments if the default highlight is off */
+/* If tutorial has animations, disable them too */
+.animations-disabled #tutorial-overlay,
+.animations-disabled #tutorial-box {
+    transition: none !important;
+}
+.animations-disabled #tutorial-overlay.hidden {
+    opacity: 0; /* Instant hide */
+}
+ .animations-disabled #tutorial-overlay.hidden #tutorial-box {
+    transform: scale(1); /* No scale effect when hidden */
+    opacity: 0;
 }
