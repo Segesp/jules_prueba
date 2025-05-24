@@ -12,5 +12,21 @@
     <div id="score-display">Score: <span id="score">0</span></div>
 </div>
 <script src="script.js"></script>
+<div id="tutorial-overlay" class="hidden">
+    <div id="tutorial-box">
+        <div id="tutorial-content">
+            <p data-step="1">Welcome to Beat The Second! Let's learn how to play.</p>
+            <p data-step="2" class="hidden">This is the main clock. The game is synchronized with its seconds.</p>
+            <p data-step="3" class="hidden">Your score is displayed here. Hits increase your score!</p>
+            <p data-step="4" class="hidden">A target will appear here in the game area. Click it FAST!</p>
+            <p data-step="5" class="hidden">Click the target *before* the second on the main clock changes. Ready?</p>
+            <p data-step="6" class="hidden">Great! The game will start now. Good luck!</p>
+        </div>
+        <div id="tutorial-navigation">
+            <button id="tutorial-next-btn">Next</button>
+            <button id="tutorial-close-btn" class="hidden">Got it!</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

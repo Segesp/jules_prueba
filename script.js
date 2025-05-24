@@ -17,32 +17,35 @@ let gameLoopTimeout;
 let targetAppearTime; // To store the timestamp when the target appears
 
 // Game Configuration
-const MIN_APPEAR_DELAY_MS = 100; // Min ms into the second for target to appear
-const MAX_APPEAR_DELAY_MS = 800; // Max ms into the second for target to appear (ensure enough time to react)
-const TARGET_VISIBLE_DURATION_MS = 700; // How long the target stays if not clicked
+const MIN_APPEAR_DELAY_MS = 100; 
+const MAX_APPEAR_DELAY_MS = 800; 
+const TARGET_VISIBLE_DURATION_MS = 700; 
 
 function showTarget() {
-    // Calculate a random time within the current second to show the target
     const randomDelay = Math.random() * (MAX_APPEAR_DELAY_MS - MIN_APPEAR_DELAY_MS) + MIN_APPEAR_DELAY_MS;
     
-    // Clear any existing timeout for showing target (e.g., if clock second changed early)
     if (gameLoopTimeout) {
         clearTimeout(gameLoopTimeout);
     }
 
     gameLoopTimeout = setTimeout(() => {
-        target.style.display = 'block';
-        target.className = ''; // Reset classes (remove hit/miss)
-        targetAppearTime = new Date().getTime(); // Record when target became visible
+        // Reset classes before showing
+        target.classList.remove('hit-animation', 'miss-animation', 'hit', 'miss', 'appear');
+        // Ensure display is 'block' for animations to work, then add appear for animation
+        // Note: .appear class in CSS now handles display:block and the materialize animation
+        target.classList.add('appear'); 
+        targetAppearTime = new Date().getTime(); 
 
-        // Set another timeout to hide the target if not clicked
-        // This also acts as the "miss" condition if time runs out for the current second
+        // Auto-miss if not clicked
         setTimeout(() => {
-            if (target.style.display === 'block' && target.className !== 'hit') { // if still visible and not already hit
-                target.className = 'miss';
-                // Hide it after a brief moment to show the miss color
-                setTimeout(() => target.style.display = 'none', 200);
-                scheduleNextTarget(); // Prepare for the next second
+            if (target.classList.contains('appear')) { // If still in 'appear' state (not clicked)
+                target.classList.remove('appear');
+                target.classList.add('miss'); // Optional for semantic state
+                target.classList.add('miss-animation');
+                target.addEventListener('animationend', function onMissAnimationEnd() {
+                    target.removeEventListener('animationend', onMissAnimationEnd); // Clean up
+                    scheduleNextTarget();
+                }, { once: true });
             }
         }, TARGET_VISIBLE_DURATION_MS);
 
@@ -50,12 +53,15 @@ function showTarget() {
 }
 
 function scheduleNextTarget() {
-    // Wait for the beginning of the next second to schedule a new target
+    // If game is paused for tutorial, don't schedule next target
+    if (gamePausedForTutorial) {
+        return;
+    }
     const now = new Date();
     const msUntilNextSecond = 1000 - now.getMilliseconds();
     
     if (gameLoopTimeout) {
-        clearTimeout(gameLoopTimeout); // Clear previous target scheduling
+        clearTimeout(gameLoopTimeout); 
     }
 
     gameLoopTimeout = setTimeout(() => {
@@ -64,39 +70,162 @@ function scheduleNextTarget() {
 }
 
 target.addEventListener('click', () => {
-    if (target.style.display !== 'block' || !targetAppearTime) {
-        return; // Target not visible or not properly set up
+    // Check if the target is currently accepting clicks (i.e., has 'appear' class)
+    if (!target.classList.contains('appear') || !targetAppearTime) {
+        return; 
     }
 
     const clickTime = new Date().getTime();
     const reactionTime = clickTime - targetAppearTime;
 
-    // Check if the click happened within the same second the target appeared
-    // And within the allowed visible duration (implicitly handled by target being visible)
     const targetAppearSecond = new Date(targetAppearTime).getSeconds();
     const clickSecond = new Date(clickTime).getSeconds();
+
+    target.classList.remove('appear'); // Remove 'appear' class as it's been interacted with
 
     if (targetAppearSecond === clickSecond && reactionTime <= TARGET_VISIBLE_DURATION_MS) {
         score++;
         scoreDisplay.textContent = score;
-        target.className = 'hit';
-        // Hide it after a brief moment to show hit color
-        setTimeout(() => target.style.display = 'none', 200); 
+        target.classList.add('hit'); // Optional: for semantic state
+        target.classList.add('hit-animation');
+        target.addEventListener('animationend', function onHitAnimationEnd() {
+            target.removeEventListener('animationend', onHitAnimationEnd); // Clean up
+            scheduleNextTarget();
+        }, { once: true });
     } else {
-        target.className = 'miss';
-        // Hide it after a brief moment to show miss color
-        setTimeout(() => target.style.display = 'none', 200);
+        target.classList.add('miss'); // Optional: for semantic state
+        target.classList.add('miss-animation');
+        target.addEventListener('animationend', function onMissAnimationEnd() {
+            target.removeEventListener('animationend', onMissAnimationEnd); // Clean up
+            scheduleNextTarget();
+        }, { once: true });
     }
     
-    targetAppearTime = null; // Reset for next appearance
-    
-    // Clear the automatic hide timeout because it was clicked
-    // (The timeout set in showTarget to auto-hide if not clicked)
-    // This requires storing its ID, let's simplify for now and rely on the fast user click.
-    // For a more robust solution, we'd clear that specific timeout.
-
-    scheduleNextTarget(); // Schedule the next target appearance
+    targetAppearTime = null; 
 });
 
-// Initial call to start the game loop
-scheduleNextTarget();
+// --- Interactive Tutorial Logic ---
+const tutorialOverlay = document.getElementById('tutorial-overlay');
+const tutorialContent = document.getElementById('tutorial-content');
+const tutorialNextBtn = document.getElementById('tutorial-next-btn');
+const tutorialCloseBtn = document.getElementById('tutorial-close-btn');
+const tutorialSteps = Array.from(tutorialContent.querySelectorAll('p[data-step]'));
+
+let currentTutorialStep = 1;
+const TOTAL_TUTORIAL_STEPS = 6; // As defined in HTML
+let gamePausedForTutorial = false;
+
+// Elements to highlight during tutorial
+const clockElement = document.getElementById('clock');
+const scoreDisplayElement = document.getElementById('score-display');
+const gameAreaElement = document.getElementById('game-area');
+// const targetElementForTutorial = document.getElementById('target'); // Re-using 'target' id if needed for static display
+
+function showTutorialStep(stepNumber) {
+    tutorialSteps.forEach(p => {
+        if (parseInt(p.dataset.step) === stepNumber) {
+            p.classList.remove('hidden');
+            p.classList.add('active-step'); 
+        } else {
+            p.classList.add('hidden');
+            p.classList.remove('active-step');
+        }
+    });
+
+    removeHighlights();
+    switch (stepNumber) {
+        case 2: 
+            clockElement.classList.add('highlight-tutorial');
+            break;
+        case 3: 
+            scoreDisplayElement.classList.add('highlight-tutorial');
+            break;
+        case 4: 
+            gameAreaElement.classList.add('highlight-tutorial');
+            // Example: Show a static target (ensure it's styled appropriately if used)
+            // target.style.opacity = '1'; target.style.transform = 'scale(1)'; target.style.display = 'block';
+            // target.classList.remove('appear', 'hit-animation', 'miss-animation');
+            break;
+        case 5: // "Ready?" step
+            // No specific highlight, or highlight game area again.
+            gameAreaElement.classList.add('highlight-tutorial');
+            break;
+    }
+    
+    if (stepNumber === TOTAL_TUTORIAL_STEPS) { 
+        tutorialNextBtn.classList.add('hidden');
+        tutorialCloseBtn.classList.remove('hidden');
+    } else {
+        tutorialNextBtn.classList.remove('hidden');
+        tutorialCloseBtn.classList.add('hidden');
+    }
+}
+
+function removeHighlights() {
+    clockElement.classList.remove('highlight-tutorial');
+    scoreDisplayElement.classList.remove('highlight-tutorial');
+    gameAreaElement.classList.remove('highlight-tutorial');
+    // If static target was shown:
+    // target.style.display = 'none'; target.style.opacity = '0'; target.style.transform = 'scale(0.5)';
+}
+
+function startTutorial() {
+    gamePausedForTutorial = true; // Pause game logic
+    if (typeof gameLoopTimeout !== 'undefined' && gameLoopTimeout) {
+         clearTimeout(gameLoopTimeout); 
+         if (target.classList.contains('appear')) { // Hide active game target if present
+            target.classList.remove('appear');
+            // Reset its animation state if needed, or ensure it's hidden by opacity/display
+            target.style.opacity = '0'; 
+            target.style.transform = 'scale(0.5)';
+         }
+    }
+
+    tutorialOverlay.classList.remove('hidden');
+    currentTutorialStep = 1;
+    showTutorialStep(currentTutorialStep);
+}
+
+function nextTutorialStep() {
+    currentTutorialStep++;
+    if (currentTutorialStep <= TOTAL_TUTORIAL_STEPS) {
+        showTutorialStep(currentTutorialStep);
+    }
+}
+
+function closeTutorial() {
+    tutorialOverlay.classList.add('hidden');
+    removeHighlights();
+    localStorage.setItem('tutorialCompleted', 'true');
+    
+    gamePausedForTutorial = false; // Unpause
+    if (typeof scheduleNextTarget === 'function') {
+        scheduleNextTarget(); // Start/Resume the game loop
+    }
+}
+
+tutorialNextBtn.addEventListener('click', nextTutorialStep);
+tutorialCloseBtn.addEventListener('click', closeTutorial);
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Ensure all elements are available before trying to interact
+    if (!tutorialOverlay || !tutorialContent || !tutorialNextBtn || !tutorialCloseBtn || !clockElement || !scoreDisplayElement || !gameAreaElement || !target) {
+        console.error("Tutorial or game elements not found on DOMContentLoaded. Tutorial might not work correctly.");
+        // Fallback: try to start game anyway if tutorial elements missing
+        if (typeof scheduleNextTarget === 'function') {
+             scheduleNextTarget();
+        }
+        return;
+    }
+
+    if (localStorage.getItem('tutorialCompleted') !== 'true') {
+        startTutorial();
+    } else {
+        // If tutorial already completed, ensure overlay is hidden and start game
+        tutorialOverlay.classList.add('hidden'); 
+        gamePausedForTutorial = false; // Ensure game is not paused
+        if (typeof scheduleNextTarget === 'function') {
+            scheduleNextTarget(); 
+        }
+    }
+});

@@ -1,60 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+:root {
+    --color-bg: #0d1117; /* GitHub dark background */
+    --color-primary-text: #c9d1d9; /* GitHub dark primary text */
+    --color-secondary-text: #8b949e; /* GitHub dark secondary text */
+    --color-border: #30363d; /* GitHub dark border */
+    --color-surface: #161b22; /* GitHub dark surface (for clock, game area bg) */
+    --color-accent-blue: #58a6ff; /* GitHub dark blue accent */
+    --color-accent-green: #3fb950; /* GitHub dark green accent */
+    --color-accent-red: #f85149; /* GitHub dark red accent */
+}
+
 body {
     display: flex;
+    flex-direction: column; /* Stack clock and game area vertically */
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; /* Use min-height to ensure full viewport coverage */
     margin: 0;
-    background-color: #f0f0f0;
-    font-family: sans-serif;
+    background-color: var(--color-bg);
+    /* Subtle starry background */
+    background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                      radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                      radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+                      radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+    background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px; 
+    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern font stack */
+    color: var(--color-primary-text);
 }
 
 #clock {
-    font-size: 4em;
-    color: #333;
-    background-color: #fff;
+    font-size: 5em;
+    color: var(--color-accent-blue);
+    /* background-color: var(--color-surface); */ /* Replaced by gradient */
+    background-image: linear-gradient(rgba(255,255,255,0.03), rgba(0,0,0,0.03)), var(--color-surface); /* Subtle overlay gradient */
     padding: 20px 40px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-#game-area {
-    margin-top: 30px;
-    padding: 20px;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    text-align: center;
-    width: 300px; /* Or a width that you think fits well */
-    background-color: #fff; /* Same as clock for consistency or a different one */
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-#target {
-    width: 50px;
-    height: 50px;
-    background-color: #007bff; /* A distinct color, e.g., blue */
-    border-radius: 50%; /* Make it a circle */
-    margin: 20px auto; /* Center it within the game-area */
-    cursor: pointer;
-    display: none; /* Initially hidden, JS will show it */
-    transition: background-color 0.1s ease; /* For feedback */
-}
-
-#target.hit {
-    background-color: #28a745; /* Green for hit */
-}
-
-#target.miss {
-    background-color: #dc3545; /* Red for miss */
-}
-
-#score-display {
-    font-size: 1.5em;
-    color: #333;
+    box-shadow: 0 0 25px rgba(0,0,0,0.3), 0 0 8px var(--color-accent-blue), inset 0 0 10px rgba(0,0,0,0.2);
+    border: 1px solid var(--color-border);
+    margin-bottom: 40px;
+    text-shadow: 0 0 5px var(--color-accent-blue), 0 0 10px rgba(88, 166, 255, 0.5);
+    letter-spacing: 2px;
 }
 
 #instructions {
     text-align: center;
-    font-size: 1em;
-    color: #555;
+    font-size: 1.1em;
+    color: var(--color-secondary-text);
+    margin-top: 20px; /* Added margin-top for spacing from clock */
+    margin-bottom: 25px; /* Increased bottom margin */
+    max-width: 350px;
+    line-height: 1.5; /* Ensure good line spacing */
+}
+
+#game-area {
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: 15px;
+    text-align: center;
+    width: 320px;
+    /* background-color: var(--color-surface); */ /* Replaced by gradient */
+    background-image: linear-gradient(rgba(255,255,255,0.02), rgba(0,0,0,0.02)), var(--color-surface); /* Subtle overlay gradient */
+    box-shadow: 0 0 20px rgba(0,0,0,0.2), inset 0 0 15px rgba(0,0,0,0.25);
+}
+
+#target {
+    width: 60px; 
+    height: 60px;
+    background-color: var(--color-accent-blue); /* Default color before animation */
+    border-radius: 50%;
+    margin: 25px auto;
+    cursor: pointer;
+    opacity: 0; /* Initially hidden via opacity for animation */
+    transform: scale(0.5); /* Initial state for materialize animation */
+}
+
+#target.hit {
+    /* Semantic class, animation handles visuals */
+}
+
+#target.miss {
+    /* Semantic class, animation handles visuals */
+}
+
+#score-display {
+    font-family: 'Orbitron', sans-serif; 
+    font-size: 2em; 
+    color: var(--color-accent-green); 
+    margin-top: 10px;
+    text-shadow: 0 0 5px var(--color-accent-green);
+}
+
+/* Target Appearance Animation: Materialize */
+@keyframes materialize {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+        box-shadow: 0 0 0px var(--color-accent-blue);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.05);
+        box-shadow: 0 0 20px var(--color-accent-blue), 0 0 30px var(--color-accent-blue);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 10px var(--color-accent-blue);
+    }
+}
+
+/* Target Hit Animation: Energy Burst */
+@keyframes energyBurst {
+    0% {
+        transform: scale(1);
+        background-color: var(--color-accent-green);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+        background-color: #fff; /* Flash white */
+        opacity: 0.75;
+        box-shadow: 0 0 30px var(--color-accent-green), 0 0 40px #fff;
+    }
+    100% {
+        transform: scale(0.8);
+        background-color: var(--color-accent-green);
+        opacity: 0;
+        box-shadow: 0 0 20px var(--color-accent-green);
+    }
+}
+
+/* Target Miss Animation: Dematerialize */
+@keyframes dematerialize {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        background-color: var(--color-accent-red);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.7);
+        background-color: var(--color-accent-red);
+    }
+}
+
+/* Classes to trigger animations */
+#target.appear {
+    display: block !important; /* Ensure it's visible when class is added */
+    animation: materialize 0.4s ease-out forwards;
+}
+
+#target.hit-animation {
+    animation: energyBurst 0.3s ease-in forwards;
+}
+
+#target.miss-animation {
+    animation: dematerialize 0.3s ease-out forwards;
+}
+
+/* Tutorial Styles */
+#tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Darker overlay for space theme */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top */
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#tutorial-overlay.hidden {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
+#tutorial-box {
+    background-color: var(--color-surface);
+    padding: 30px 40px;
+    border-radius: 15px;
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent-blue); /* Accent top border */
+    box-shadow: 0 0 30px rgba(88, 166, 255, 0.3), 0 0 15px var(--color-accent-blue);
+    text-align: center;
+    width: 90%;
+    max-width: 450px;
+    color: var(--color-primary-text);
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Add opacity to existing transition */
+}
+
+#tutorial-overlay.hidden #tutorial-box {
+    transform: scale(0.9);
+    opacity: 0; /* Ensure opacity is part of the hidden state transition */
+}
+
+#tutorial-content p {
+    font-size: 1.1em;
+    line-height: 1.6;
     margin-bottom: 15px;
+    color: var(--color-secondary-text);
+}
+
+#tutorial-content p.active-step { /* To highlight current step text if needed */
+    color: var(--color-primary-text);
+    font-weight: bold;
+}
+
+#tutorial-navigation {
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px;
+}
+
+#tutorial-navigation button {
+    background-color: var(--color-accent-blue);
+    color: #fff; /* White text on accent buttons */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#tutorial-navigation button:hover {
+    background-color: #4a91e3; /* Slightly lighter blue on hover */
+    transform: translateY(-1px);
+}
+
+#tutorial-navigation button:active {
+    transform: translateY(0px);
+}
+
+#tutorial-navigation button.hidden,
+#tutorial-content p.hidden {
+    display: none;
+}
+
+/* Tutorial Highlighting Effect */
+.highlight-tutorial {
+    outline: 3px solid var(--color-accent-blue); /* A bright outline */
+    box-shadow: 0 0 15px var(--color-accent-blue), 0 0 25px var(--color-accent-blue), 0 0 35px var(--color-accent-blue); /* Glowing effect */
+    border-radius: inherit; /* Inherit border-radius from the element itself or set a specific one */
+    position: relative; /* Helps with stacking context if needed */
+    z-index: 1001; /* Ensure it's above the dark overlay but below the tutorial text box */
+    transition: outline 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Ensure the highlighted element is not obscured by other general elements, if necessary */
+#clock.highlight-tutorial,
+#score-display.highlight-tutorial,
+#game-area.highlight-tutorial {
+    /* Add specific position adjustments if the default highlight is off */
 }
