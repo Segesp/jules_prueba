@@ -1,39 +1,39 @@
-# Simple Web Clock & "Beat The Second" Game
+# Minimalist Puzzle Clock
 
-A dynamic web application featuring a sleek, space-themed digital clock and an engaging reaction-based mini-game called "Beat The Second". Built with HTML, CSS, and vanilla JavaScript, this project now boasts a dark mode interface, polished animations, an interactive tutorial, diverse target types, and a progressively challenging game loop.
+A challenging puzzle game requiring spatial thinking and synchronization. The objective is to align all hands on double-sided clock boards to the 12 o'clock position using a set of levers that affect hands on both faces simultaneously.
+
+The game features a clean, minimalist design to help you focus on the puzzle.
 
 ## Features
 
--   **Themed Digital Clock:** Displays time in HH:MM:SS format with a modern, dark space aesthetic.
--   **"Beat The Second" Mini-Game:**
-    -   Test your reaction time by clicking the target before the second ticks over!
-    -   **Multiple Target Types:**
-        -   **Standard:** Basic point scoring.
-        -   **Bonus:** Awards extra points.
-        -   **Avoid:** Incurs a penalty if clicked.
-        -   **Quick-Fade:** Shorter visibility for a speed challenge.
-    -   **Dynamic Target Behaviors:**
-        -   **Moving Targets:** Drift within the game area.
-        -   **Multi-Click Targets:** Require several clicks to capture, with feedback on each click and changing visual cues for remaining clicks.
-        -   **Shrinking/Growing Targets:** Target size changes dynamically after appearing.
-    -   **Progressive Difficulty:** Game subtly becomes more challenging as your score increases, introducing more complex targets more frequently.
-    -   **Enhanced Animations:** Refined appear, hit, and miss animations for targets, plus subtle score update feedback. Animations are designed to be smooth and respect the "Reduce Animations" accessibility setting.
-    -   **Performance Optimized:** Main game loop uses `requestAnimationFrame` for efficient timing and smoother visuals.
--   **Dark Mode Interface:** Stylish and easy on the eyes, inspired by GitHub's dark theme with space elements.
--   **Interactive Tutorial:** A guided walkthrough for first-time users explaining how to play the game.
+-   **Real-Time Clock Display:** Shows the current actual time (persists from previous application version).
+-   **Minimalist Puzzle Clock Game (Version 1 - Level 1):**
+    -   **Objective:** Align all 12 hands on both the front and back clock faces to the 12 o'clock position.
+    -   **Double-Sided Clock Boards:** Interact with two clock faces simultaneously.
+    -   **Interconnected Controls (Levers):** Four levers are available. Each lever affects a specific set of hands on the front clock face (typically moving them clockwise) and a corresponding set of hands on the back clock face (typically moving them counter-clockwise).
+    -   **Intermediate Mechanic - Pin Blocker:** "Lever 4" toggles a "Pin Blocker" (Pin F-A). When active, this pin blocks the movement of certain hands on the front clock face, adding a strategic layer to the puzzle.
+    -   **Visual Feedback:** Smooth hand animations and clear feedback on lever activation and win state.
+    -   **Reset Functionality:** Allows resetting the current level to its initial state.
 -   **Responsive Design:** Adapts to various screen sizes for a consistent experience on desktop, tablet, and mobile devices.
--   **Accessibility Enhancements:**
-    -   Full keyboard navigation for all interactive elements.
+-   **Accessibility Considerations:**
+    -   Keyboard navigation for controls.
     -   Clear visual focus indicators.
-    -   Game target operable via keyboard (Enter/Space).
-    -   ARIA role (`role="button"`) for the game target to improve screen reader understanding.
-    -   Option to reduce or disable animations for users sensitive to motion.
--   **Lightweight and Fast-Loading:** Built with pure HTML, CSS, and JavaScript.
--   **Easy to Deploy:** Static files ready for any web hosting service (GitHub Pages instructions included).
+    -   Option to reduce/disable animations (persists from previous application version, though current puzzle game has fewer complex animations).
+
+## How to Play "Minimalist Puzzle Clock"
+
+1.  **Objective:** The goal is to set all 12 hands on *both* the front clock face and the back clock face to point to the 12 o'clock position.
+2.  **Controls:**
+    -   Use **Lever 1, Lever 2, and Lever 3** to move specific groups of hands. Each of these levers moves a set of hands on the front clock clockwise and the corresponding hands on the back clock counter-clockwise.
+    -   **Lever 4** toggles the state of "Pin F-A" (Active/Inactive).
+3.  **Pin Blocker (Pin F-A):**
+    -   When Pin F-A is **Active**, it prevents Levers 1, 2, or 3 from moving the first three hands (1, 2, 3 o'clock positions) on the **front** clock face. It does not affect the back clock hands directly.
+    -   Use Lever 4 strategically to activate or deactivate the pin to enable the required moves.
+4.  **Solving:** Experiment with the levers to understand their effects. Plan your moves carefully, considering how each action impacts both clock faces and how the pin state might help or hinder your progress.
+5.  **Winning:** The level is complete when all 24 hands (12 on front, 12 on back) point to 12. A "Level Complete!" message will appear.
+6.  **Reset:** Use the "Reset Level" button at any time to start the current level over.
 
 ## Running Locally
-
-To run this application locally:
 
 1.  Clone this repository or download the source files (`index.html`, `style.css`, `script.js`).
 2.  Navigate to the directory where you saved the files.
@@ -46,9 +46,8 @@ No special build steps or dependencies are required.
 This web application consists of static files and can be deployed to any static web hosting service.
 
 ### GitHub Pages
-
 GitHub Pages is a great way to host this project for free directly from your GitHub repository.
-(Instructions for GitHub Pages remain the same)
+
 1.  **Ensure your code is in a GitHub repository.** If you cloned this project or created your own, make sure it's pushed to a repository on GitHub.
 2.  **Navigate to Repository Settings:** In your GitHub repository, click on the "Settings" tab.
 3.  **Go to Pages:** In the left sidebar, click on "Pages" under the "Code and automation" section.
@@ -60,7 +59,6 @@ GitHub Pages is a great way to host this project for free directly from your Git
 6.  **Wait for Publishing:** GitHub Actions will start a deployment process. After a few minutes, your site will be published at `https://<your-username>.github.io/<your-repository-name>/`. You'll see the URL on the Pages settings screen once it's live.
 
 ### Other Services
-
 Other popular options for static hosting include:
 -   Netlify
 -   Vercel
@@ -72,26 +70,8 @@ For these services, you would typically upload the `index.html`, `style.css`, an
 ## Technologies Used
 
 -   **HTML5:** For the basic structure of the web page.
--   **CSS3:** For styling the clock and page layout, including a responsive theme and advanced animations (`@keyframes`, transitions).
--   **JavaScript (ES6+):** For the clock's functionality, all game logic (including the `requestAnimationFrame` based game loop), interactive tutorial, and dynamic target behaviors.
-
-## Beat The Second - Mini-Game
-
-Integrated into this web clock is a simple and fun reaction-based mini-game called "Beat The Second"!
-
-### How to Play
-
-1.  **Interactive Tutorial:** If it's your first time, an interactive tutorial will guide you through the basics!
-2.  **Objective:** Click the colored circle (the target) as quickly as possible after it appears.
-3.  **Target Variations:** Be prepared for different types of targets!
-    -   Some are standard, some give **bonus** points.
-    -   Watch out for **avoid** targets (don't click them!).
-    -   Some targets might be **quick-fading**, **move around**, require **multiple clicks**, or even **change size**!
-4.  **Timing is Key:** You must click the target *before* the main clock display ticks to the next second.
-5.  **Scoring & Animations:** Successful hits on positive targets increase your score with an "energy burst" animation. Penalties apply for misclicked "avoid" targets. Missed targets will "dematerialize."
-
-The game starts automatically after the tutorial (or immediately if you've completed it before). Good luck!
+-   **CSS3:** For styling, layout (including Flexbox for responsive design), and basic animations/transitions.
+-   **JavaScript (ES6+):** For all game logic, DOM manipulation, event handling, and dynamic clock hand rendering.
 
 ## Contributing
-
 Contributions are welcome! If you have ideas for improvements or find any issues, please feel free to open an issue or submit a pull request.

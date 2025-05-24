@@ -7,32 +7,54 @@
 </head>
 <body>
 <div id="clock"></div>
-<p id="instructions">Click the circle before the second ticks over on the clock!</p>
-<div id="animation-toggle-container">
-    <label for="animation-toggle">Reduce Animations:</label>
-    <input type="checkbox" id="animation-toggle" aria-describedby="animation-toggle-desc">
-    <p id="animation-toggle-desc" class="sr-only">Check to reduce motion and animations in the game.</p>
-</div>
-<div id="game-area">
-    <div id="target" tabindex="0" role="button"></div>
-    <div id="score-display">Score: <span id="score">0</span></div>
-</div>
-<script src="script.js"></script>
-<div id="tutorial-overlay" class="hidden">
-    <div id="tutorial-box">
-        <div id="tutorial-content">
-            <p data-step="1">Welcome to Beat The Second! Let's learn how to play.</p>
-            <p data-step="2" class="hidden">This is the main clock. The game is synchronized with its seconds.</p>
-            <p data-step="3" class="hidden">Your score is displayed here. Hits increase your score!</p>
-            <p data-step="4" class="hidden">A target will appear here in the game area. Click it FAST!</p>
-            <p data-step="5" class="hidden">Click the target *before* the second on the main clock changes. Ready?</p>
-            <p data-step="6" class="hidden">Great! The game will start now. Good luck!</p>
+
+<!-- Minimalist Puzzle Clock Game -->
+<div id="puzzle-game-container">
+    <div id="puzzle-header">
+        <h2 id="level-display">Level: <span id="level-number">1</span></h2>
+        <p id="puzzle-instructions">Objective: Align all hands to 12 o'clock on both clock faces. Use the Levers to move sets of hands. Lever 4 (L4) toggles the Pin. When the Pin is Active, some front hands are blocked.</p>
+    </div>
+
+    <div id="clock-boards-wrapper">
+        <!-- Front Clock Board -->
+        <div class="clock-board" id="clock-board-front">
+            <div class="clock-face" id="clock-face-front">
+                <!-- Hands will be added here by JavaScript -->
+                <!-- Example of one hand (JS will create 12 of these) -->
+                <!-- <div class="clock-hand" style="transform: rotate(0deg);"></div> -->
+            </div>
+            <div class="clock-center-pin"></div>
         </div>
-        <div id="tutorial-navigation">
-            <button id="tutorial-next-btn">Next</button>
-            <button id="tutorial-close-btn" class="hidden">Got it!</button>
+
+        <!-- Back Clock Board (conceptually, might be visually integrated or separate) -->
+        <div class="clock-board" id="clock-board-back">
+            <div class="clock-face" id="clock-face-back">
+                <!-- Hands will be added here by JavaScript -->
+            </div>
+            <div class="clock-center-pin"></div>
         </div>
     </div>
+
+    <div id="puzzle-controls">
+        <!-- Example Levers/Buttons (JS will make these functional) -->
+        <button class="control-lever" data-control-id="0">Lever 1</button>
+        <button class="control-lever" data-control-id="1">Lever 2</button>
+        <button class="control-lever" data-control-id="2">Lever 3</button>
+        <button class="control-lever" data-control-id="3">Lever 4</button>
+    </div>
+    
+    <div id="puzzle-feedback">
+        <p id="win-message" class="hidden">Level Complete!</p>
+        <button id="reset-level-btn">Reset Level</button>
+        <!-- <button id="next-level-btn" class="hidden">Next Level</button> -->
+    </div>
+
+    <!-- Placeholder for Intermediate State Mechanic Visuals -->
+    <div id="intermediate-mechanics-display">
+        <div class="pin-blocker-indicator" id="pin-front-A">Pin F-A: <span class="pin-state">Inactive</span></div>
+    </div>
 </div>
+
+<script src="script.js"></script>
 </body>
 </html>
