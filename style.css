@@ -76,6 +76,65 @@ body {
     margin: 0;
 }
 
+/* Tutorial Prompt Area Styles */
+#tutorial-prompt-area {
+    background-color: var(--color-surface-primary);
+    border: 1px solid var(--color-border-light);
+    border-top: 3px solid var(--color-accent-primary); /* Accent like old tutorial box */
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px; /* Space from header */
+    margin-bottom: 10px; /* Space from clock boards */
+    width: 90%;
+    max-width: 600px; /* Or adjust to fit content */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s linear 0.3s;
+}
+
+#tutorial-prompt-area:not(.hidden) { /* When visible */
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    transition-delay: 0s; /* Ensure visibility transition doesn't delay appearance */
+}
+
+#tutorial-prompt-text {
+    font-size: 0.95em;
+    color: var(--color-text-secondary);
+    margin: 0 0 10px 0;
+    line-height: 1.5;
+}
+
+#tutorial-prompt-next-btn {
+    padding: 8px 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--color-text-on-accent);
+    background-color: var(--color-accent-primary);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#tutorial-prompt-next-btn:hover {
+    background-color: var(--color-accent-primary-darker);
+}
+
+.highlight-tutorial {
+    outline: 3px solid var(--color-accent-primary);
+    box-shadow: 0 0 15px var(--color-accent-primary), 0 0 25px var(--color-accent-primary);
+    border-radius: inherit; /* Or a fixed value like 5px */
+    position: relative;
+    z-index: 200; /* Ensure it's above other game elements but below modals if any */
+    transition: outline 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+
 #clock-boards-wrapper {
     display: flex;
     justify-content: space-around; /* Space out front and back clocks */
