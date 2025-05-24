@@ -1,14 +1,24 @@
 # Simple Web Clock & "Beat The Second" Game
 
-A dynamic web application featuring a sleek, space-themed digital clock and an engaging reaction-based mini-game called "Beat The Second". Built with HTML, CSS, and vanilla JavaScript, this project now boasts a dark mode interface, polished animations, and an interactive tutorial for new players.
+A dynamic web application featuring a sleek, space-themed digital clock and an engaging reaction-based mini-game called "Beat The Second". Built with HTML, CSS, and vanilla JavaScript, this project now boasts a dark mode interface, polished animations, an interactive tutorial, diverse target types, and a progressively challenging game loop.
 
 ## Features
 
 -   **Themed Digital Clock:** Displays time in HH:MM:SS format with a modern, dark space aesthetic.
 -   **"Beat The Second" Mini-Game:**
     -   Test your reaction time by clicking the target before the second ticks over!
-    -   Dynamic target appearance and scoring.
-    -   Enhanced visual feedback with polished animations for hits and misses.
+    -   **Multiple Target Types:**
+        -   **Standard:** Basic point scoring.
+        -   **Bonus:** Awards extra points.
+        -   **Avoid:** Incurs a penalty if clicked.
+        -   **Quick-Fade:** Shorter visibility for a speed challenge.
+    -   **Dynamic Target Behaviors:**
+        -   **Moving Targets:** Drift within the game area.
+        -   **Multi-Click Targets:** Require several clicks to capture, with feedback on each click and changing visual cues for remaining clicks.
+        -   **Shrinking/Growing Targets:** Target size changes dynamically after appearing.
+    -   **Progressive Difficulty:** Game subtly becomes more challenging as your score increases, introducing more complex targets more frequently.
+    -   **Enhanced Animations:** Refined appear, hit, and miss animations for targets, plus subtle score update feedback. Animations are designed to be smooth and respect the "Reduce Animations" accessibility setting.
+    -   **Performance Optimized:** Main game loop uses `requestAnimationFrame` for efficient timing and smoother visuals.
 -   **Dark Mode Interface:** Stylish and easy on the eyes, inspired by GitHub's dark theme with space elements.
 -   **Interactive Tutorial:** A guided walkthrough for first-time users explaining how to play the game.
 -   **Responsive Design:** Adapts to various screen sizes for a consistent experience on desktop, tablet, and mobile devices.
@@ -38,7 +48,7 @@ This web application consists of static files and can be deployed to any static 
 ### GitHub Pages
 
 GitHub Pages is a great way to host this project for free directly from your GitHub repository.
-
+(Instructions for GitHub Pages remain the same)
 1.  **Ensure your code is in a GitHub repository.** If you cloned this project or created your own, make sure it's pushed to a repository on GitHub.
 2.  **Navigate to Repository Settings:** In your GitHub repository, click on the "Settings" tab.
 3.  **Go to Pages:** In the left sidebar, click on "Pages" under the "Code and automation" section.
@@ -52,7 +62,6 @@ GitHub Pages is a great way to host this project for free directly from your Git
 ### Other Services
 
 Other popular options for static hosting include:
-
 -   Netlify
 -   Vercel
 -   AWS S3
@@ -63,8 +72,8 @@ For these services, you would typically upload the `index.html`, `style.css`, an
 ## Technologies Used
 
 -   **HTML5:** For the basic structure of the web page.
--   **CSS3:** For styling the clock and page layout, including animations and a responsive theme.
--   **JavaScript (ES6+):** For the clock's functionality, game logic, and interactive tutorial.
+-   **CSS3:** For styling the clock and page layout, including a responsive theme and advanced animations (`@keyframes`, transitions).
+-   **JavaScript (ES6+):** For the clock's functionality, all game logic (including the `requestAnimationFrame` based game loop), interactive tutorial, and dynamic target behaviors.
 
 ## Beat The Second - Mini-Game
 
@@ -73,12 +82,13 @@ Integrated into this web clock is a simple and fun reaction-based mini-game call
 ### How to Play
 
 1.  **Interactive Tutorial:** If it's your first time, an interactive tutorial will guide you through the basics!
-2.  **Objective:** Click the colored circle (the target) as quickly as possible after it appears with a "materialize" animation.
-3.  **Timing is Key:** You must click the target *before* the main clock display ticks to the next second. The target will appear at a random moment within the current second.
-4.  **Scoring & Animations:**
-    -   If you click the target in time, it will trigger an "energy burst" animation, and your score increases.
-    -   If you click too late or miss, the target will "dematerialize." Your score won't increase for that round.
-5.  **Gameplay:** The game runs continuously. A new target will appear with its animation shortly after the start of each new second on the main clock.
+2.  **Objective:** Click the colored circle (the target) as quickly as possible after it appears.
+3.  **Target Variations:** Be prepared for different types of targets!
+    -   Some are standard, some give **bonus** points.
+    -   Watch out for **avoid** targets (don't click them!).
+    -   Some targets might be **quick-fading**, **move around**, require **multiple clicks**, or even **change size**!
+4.  **Timing is Key:** You must click the target *before* the main clock display ticks to the next second.
+5.  **Scoring & Animations:** Successful hits on positive targets increase your score with an "energy burst" animation. Penalties apply for misclicked "avoid" targets. Missed targets will "dematerialize."
 
 The game starts automatically after the tutorial (or immediately if you've completed it before). Good luck!
 

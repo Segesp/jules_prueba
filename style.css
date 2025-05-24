@@ -9,6 +9,7 @@
     --color-accent-blue: #58a6ff; /* GitHub dark blue accent */
     --color-accent-green: #3fb950; /* GitHub dark green accent */
     --color-accent-red: #f85149; /* GitHub dark red accent */
+    --color-accent-yellow: #FFD700; /* Gold/Yellow for multi-click state */
 }
 
 body {
@@ -57,16 +58,19 @@ body {
 }
 
 #game-area {
-    padding: 20px;
+    padding: 0; /* Padding might interfere with perc_pos of target, adjust if needed */
     border: 1px solid var(--color-border);
     border-radius: 15px;
-    text-align: center;
-    width: 320px; /* This will be the max-width effectively */
-    max-width: 90%; /* Ensure it shrinks on smaller viewports */
+    text-align: center; /* May not be needed if target is absolute */
+    width: 320px; 
+    height: 200px; /* Explicit height for positioning context */
+    max-width: 90%; 
     background-image: linear-gradient(rgba(255,255,255,0.02), rgba(0,0,0,0.02)), var(--color-surface);
     box-shadow: 0 0 20px rgba(0,0,0,0.2), inset 0 0 15px rgba(0,0,0,0.25);
-    margin-left: auto; /* Center if using max-width */
+    margin-left: auto; 
     margin-right: auto;
+    position: relative; /* For containing absolutely positioned target */
+    overflow: hidden; /* Prevent moving target from appearing outside */
 }
 
 #target {
@@ -74,10 +78,22 @@ body {
     height: 60px;
     background-color: var(--color-accent-blue); 
     border-radius: 50%;
-    margin: 20px auto; 
+    /* margin: 20px auto; /* Replaced by absolute positioning */
     cursor: pointer;
     opacity: 0; 
-    transform: scale(0.5); 
+    /* transform: scale(0.5); /* Initial scale is part of combined transform */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em; 
+    color: #fff; 
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(0,0,0,0.7);
+    position: absolute; /* For precise positioning within game-area */
+    left: 50%; /* Initial horizontal center */
+    top: 50%;  /* Initial vertical center */
+    transform: translate(-50%, -50%) scale(0.5); /* Centering trick & initial materialize scale */
+    will-change: transform, opacity; /* Hint for browser optimization */
 }
 
 #target.hit {
@@ -88,34 +104,151 @@ body {
     /* Semantic class, animation handles visuals */
 }
 
+/* Specific Target Type Styles */
+.target-standard { 
+    /* background-color: var(--color-accent-blue); Default, set in #target */
+}
+
+.target-bonus {
+    background-color: var(--color-accent-green); 
+    border: 2px solid #fff; 
+    box-shadow: 0 0 15px var(--color-accent-green), 0 0 25px var(--color-accent-green), 0 0 5px #fff inset; 
+}
+
+.target-avoid {
+    background-color: var(--color-accent-red); 
+    border: 2px dashed #fff; 
+    box-shadow: 0 0 15px var(--color-accent-red), 0 0 25px var(--color-accent-red); 
+}
+
+.target-quickfade {
+    background-color: #4A8ECC; 
+}
+
+.target-multiclick {
+    background-color: var(--color-accent-blue); /* Base color for multi-click */
+    border: 2px solid var(--color-primary-text); /* Distinct border */
+    /* Text color is white by default from #target base style */
+}
+
+.target-multiclick.clicks-2 {
+    border-color: var(--color-accent-yellow); /* Gold for 2 clicks left */
+}
+
+.target-multiclick.clicks-1 {
+    border-color: var(--color-accent-red); /* Red for 1 click left */
+}
+
 #score-display {
     font-family: 'Orbitron', sans-serif; 
     font-size: 2em; 
     color: var(--color-accent-green); 
-    margin-top: 10px;
-    text-shadow: 0 0 5px var(--color-accent-green);
+    margin-top: 10px; 
+    position: relative; 
+    z-index: 10; 
 }
 
+#score.updating { /* The span with id="score" */
+    animation: scoreUpdate 0.3s ease-in-out;
+}
+
+
 /* Target Animations */
-@keyframes materialize { /* ... existing keyframes ... */ 
-    0% { opacity: 0; transform: scale(0.5); box-shadow: 0 0 0px var(--color-accent-blue); }
-    70% { opacity: 1; transform: scale(1.05); box-shadow: 0 0 20px var(--color-accent-blue), 0 0 30px var(--color-accent-blue); }
-    100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px var(--color-accent-blue); }
+@keyframes materialize {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.4); /* Start slightly smaller */
+        box-shadow: 0 0 0px var(--color-accent-blue);
+    }
+    60% { /* Overshoot scale slightly */
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1); 
+        box-shadow: 0 0 25px var(--color-accent-blue), 0 0 35px var(--color-accent-blue);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 10px var(--color-accent-blue);
+    }
 }
-@keyframes energyBurst { /* ... existing keyframes ... */ 
-    0% { transform: scale(1); background-color: var(--color-accent-green); opacity: 1; }
-    50% { transform: scale(1.3); background-color: #fff; opacity: 0.75; box-shadow: 0 0 30px var(--color-accent-green), 0 0 40px #fff; }
-    100% { transform: scale(0.8); background-color: var(--color-accent-green); opacity: 0; box-shadow: 0 0 20px var(--color-accent-green); }
+
+@keyframes energyBurst {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        background-color: var(--color-accent-green);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.4); /* Larger scale up */
+        background-color: #fff; 
+        opacity: 0.8;
+        /* Multiple box-shadows for a mini explosion/particle effect */
+        box-shadow: 0 0 30px 10px var(--color-accent-green), 0 0 40px 20px #fff, 0 0 50px 30px rgba(63, 185, 80, 0.5);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.7); /* Shrink further */
+        background-color: var(--color-accent-green);
+        opacity: 0;
+        box-shadow: 0 0 20px 5px var(--color-accent-green); /* Lingering glow */
+    }
 }
-@keyframes dematerialize { /* ... existing keyframes ... */
-    0% { opacity: 1; transform: scale(1); background-color: var(--color-accent-red); }
-    100% { opacity: 0; transform: scale(0.7); background-color: var(--color-accent-red); }
+
+@keyframes dematerialize {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        background-color: var(--color-accent-red);
+    }
+    80% {
+        opacity: 0.2;
+        transform: translate(-50%, -50%) scale(0.6);
+        background-color: hsl(from var(--color-accent-red) h s calc(l - 20%)); /* Darken red */
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5); /* Shrink a bit more */
+        background-color: hsl(from var(--color-accent-red) h s calc(l - 20%));
+    }
+}
+
+@keyframes shake { /* A simple shake animation for multi-click feedback */
+    0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+    25% { transform: translate(-50%, -50%) translateX(-3px) rotate(-1deg); }
+    50% { transform: translate(-50%, -50%) translateX(3px) rotate(1deg); }
+    75% { transform: translate(-50%, -50%) translateX(-3px) rotate(-1deg); }
+}
+
+@keyframes scoreUpdate {
+    0% {
+        transform: scale(1);
+        /* color: var(--color-accent-green); /* Base score color */
+    }
+    50% {
+        transform: scale(1.25); /* Scale up */
+        color: #fff; /* Flash to white */
+        text-shadow: 0 0 8px #fff, 0 0 15px var(--color-accent-green); /* Brighter glow */
+    }
+    100% {
+        transform: scale(1);
+        /* color: var(--color-accent-green); /* Return to base score color */
+    }
 }
 
 /* Animation Trigger Classes */
-#target.appear { display: block !important; animation: materialize 0.4s ease-out forwards; }
-#target.hit-animation { animation: energyBurst 0.3s ease-in forwards; }
-#target.miss-animation { animation: dematerialize 0.3s ease-out forwards; }
+#target.appear { 
+    display: block !important; 
+    animation: materialize 0.5s ease-out forwards; /* Updated duration */
+}
+#target.hit-animation { 
+    animation: energyBurst 0.4s ease-in forwards; /* Updated duration */
+}
+#target.miss-animation { 
+    animation: dematerialize 0.4s ease-out forwards; /* Updated duration */
+}
+#target.interim-click-feedback { 
+    animation: shake 0.2s ease-in-out;
+}
+
 
 /* Tutorial Styles */
 #tutorial-overlay { /* ... existing styles ... */ 
@@ -193,6 +326,9 @@ body {
         padding: 15px 30px;
         margin-bottom: 30px;
     }
+    #game-area {
+        height: 180px; /* Adjust height for tablets */
+    }
 }
 
 /* Mobile Styles */
@@ -214,15 +350,15 @@ body {
     }
 
     #game-area {
-        padding: 15px;
+        padding: 0; /* Adjusted for absolute positioning */
         width: auto; 
-        /* max-width: 90%; is already set in base and applies */
+        height: 150px; /* Explicit height for mobile */
     }
 
     #target {
         width: 50px; 
         height: 50px;
-        margin: 15px auto;
+        /* margin: 15px auto; /* Not needed with absolute */
     }
 
     #score-display {
@@ -250,15 +386,15 @@ body {
 
 /* Focus Visible Styles */
 #target:focus-visible {
-    outline: 3px solid var(--color-accent-green); /* Use green accent for focus on target */
-    outline-offset: 3px; /* Offset outline so it doesn't overlap the target itself */
-    box-shadow: 0 0 10px var(--color-accent-green), 0 0 20px var(--color-accent-green); /* Glowing effect for focus */
+    outline: 3px solid var(--color-accent-green); 
+    outline-offset: 3px; 
+    box-shadow: 0 0 10px var(--color-accent-green), 0 0 20px var(--color-accent-green); 
 }
 
 #tutorial-navigation button:focus-visible {
-    outline: 3px solid #fff; /* White outline for buttons on dark blue background */
+    outline: 3px solid #fff; 
     outline-offset: 2px;
-    box-shadow: 0 0 8px #fff; /* Subtle white glow */
+    box-shadow: 0 0 8px #fff; 
 }
 
 /* Animation Toggle Styles */
@@ -273,13 +409,12 @@ body {
 }
 
 #animation-toggle {
-    /* Basic styling for the checkbox, can be enhanced */
-    accent-color: var(--color-accent-blue); /* Style the checkbox color */
+    accent-color: var(--color-accent-blue); 
     width: 18px;
     height: 18px;
 }
 
-.sr-only { /* Screen-reader only class */
+.sr-only { 
     position: absolute;
     width: 1px;
     height: 1px;
@@ -294,42 +429,40 @@ body {
 /* Styles for when animations are disabled */
 .animations-disabled #target.appear,
 .animations-disabled #target.hit-animation,
-.animations-disabled #target.miss-animation {
-    animation: none !important; /* Disable keyframe animations */
+.animations-disabled #target.miss-animation,
+.animations-disabled #target.interim-click-feedback,
+.animations-disabled #score.updating { /* Also disable score update animation */
+    animation: none !important; 
 }
 
-/* Provide simple fallback transitions if animations are disabled */
 .animations-disabled #target {
     transition: opacity 0.1s ease-out, background-color 0.1s ease-out;
 }
 
-/* When animations are disabled, ensure target becomes visible/hidden quickly */
 .animations-disabled #target.appear {
-    opacity: 1 !important; /* Make it appear instantly */
-    transform: scale(1) !important; /* Reset any initial transform for materialize */
-    display: block !important; /* Ensure it's visible */
+    opacity: 1 !important; 
+    transform: translate(-50%, -50%) scale(1) !important; /* Ensure centering is maintained */
+    display: block !important; 
 }
 
-/* For hit/miss when animations disabled, just change color and hide */
 .animations-disabled #target.hit-animation {
     background-color: var(--color-accent-green);
-    opacity: 0; /* Fade out quickly */
+    opacity: 0; 
 }
 
 .animations-disabled #target.miss-animation {
     background-color: var(--color-accent-red);
-    opacity: 0; /* Fade out quickly */
+    opacity: 0; 
 }
 
-/* If tutorial has animations, disable them too */
 .animations-disabled #tutorial-overlay,
 .animations-disabled #tutorial-box {
     transition: none !important;
 }
 .animations-disabled #tutorial-overlay.hidden {
-    opacity: 0; /* Instant hide */
+    opacity: 0; 
 }
  .animations-disabled #tutorial-overlay.hidden #tutorial-box {
-    transform: scale(1); /* No scale effect when hidden */
+    transform: scale(1); 
     opacity: 0;
 }
