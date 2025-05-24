@@ -16,3 +16,45 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
+
+#game-area {
+    margin-top: 30px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px; /* Or a width that you think fits well */
+    background-color: #fff; /* Same as clock for consistency or a different one */
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+#target {
+    width: 50px;
+    height: 50px;
+    background-color: #007bff; /* A distinct color, e.g., blue */
+    border-radius: 50%; /* Make it a circle */
+    margin: 20px auto; /* Center it within the game-area */
+    cursor: pointer;
+    display: none; /* Initially hidden, JS will show it */
+    transition: background-color 0.1s ease; /* For feedback */
+}
+
+#target.hit {
+    background-color: #28a745; /* Green for hit */
+}
+
+#target.miss {
+    background-color: #dc3545; /* Red for miss */
+}
+
+#score-display {
+    font-size: 1.5em;
+    color: #333;
+}
+
+#instructions {
+    text-align: center;
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 15px;
+}

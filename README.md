@@ -54,6 +54,22 @@ For these services, you would typically upload the `index.html`, `style.css`, an
 -   **CSS3:** For styling the clock and page layout.
 -   **JavaScript (ES6+):** For the clock's functionality, updating the time dynamically.
 
+## Beat The Second - Mini-Game
+
+Integrated into this web clock is a simple and fun reaction-based mini-game called "Beat The Second"!
+
+### How to Play
+
+1.  **Objective:** Click the colored circle (the target) as quickly as possible after it appears.
+2.  **Timing is Key:** You must click the target *before* the main clock display ticks to the next second. The target will appear at a random moment within the current second.
+3.  **Scoring:**
+    *   If you click the target in time (within the same second it appeared), your score increases. The target will flash green.
+    *   If you click too late (after the clock's second has changed) or miss the target entirely, it will flash red, and your score will not increase for that round.
+4.  **Gameplay:** The game runs continuously. A new target will appear in the game area shortly after the start of each new second on the main clock.
+5.  **Instructions on Page:** Look for the instruction "Click the circle before the second ticks over on the clock!" above the game area on the webpage.
+
+The game starts automatically when the page loads. Good luck!
+
 ## Contributing
 
 Contributions are welcome! If you have ideas for improvements or find any issues, please feel free to open an issue or submit a pull request.
